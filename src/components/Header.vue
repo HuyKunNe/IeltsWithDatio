@@ -52,11 +52,11 @@
             color="#7d4700"
             class="px-4 py-2 font-bold rounded-lg"
           >
-            ĐĂNG NHẬP
+            SIGN IN
           </n-button>
         </router-link>
         <router-link to="/register">
-          <n-button class="px-4 py-2 font-bold rounded-lg"> ĐĂNG KÝ </n-button>
+          <n-button class="px-4 py-2 font-bold rounded-lg"> SIGN UP </n-button>
         </router-link>
       </div>
     </div>

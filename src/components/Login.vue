@@ -4,7 +4,10 @@
   >
     <div class="max-w-md w-full space-y-8">
       <div>
-        <div class="flex justify-center" @click="switchToHome">
+        <div
+          class="flex justify-center cursor-pointer hover:opacity-80 transition-opacity duration-200"
+          @click="switchToHome"
+        >
           <img
             src="../assets/logo.png"
             alt="IELTS Test Logo"
@@ -12,16 +15,16 @@
           />
         </div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-primary">
-          ĐĂNG NHẬP
+          SIGN IN
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          Hoặc
+          Or
           <a
             href="#"
             class="font-medium text-primary hover:text-primary-light"
             @click.prevent="switchToRegister"
           >
-            đăng ký tài khoản mới
+            Register new account
           </a>
         </p>
       </div>
@@ -32,10 +35,10 @@
         :rules="rules"
         ref="loginForm"
       >
-        <n-form-item path="username" label="Username">
+        <n-form-item path="userName" label="Username">
           <n-input
             v-model:value="formData.userName"
-            placeholder="Nhập username của bạn"
+            placeholder="Enter your username"
             size="large"
             @keydown.enter="handleLogin"
           >
@@ -45,11 +48,11 @@
           </n-input>
         </n-form-item>
 
-        <n-form-item path="password" label="Mật khẩu">
+        <n-form-item path="password" label="Password">
           <n-input
             v-model:value="formData.password"
             type="password"
-            placeholder="Nhập mật khẩu"
+            placeholder="Enter your password"
             size="large"
             @keydown.enter="handleLogin"
           >
@@ -60,11 +63,9 @@
         </n-form-item>
 
         <div class="flex items-center justify-between">
-          <n-checkbox v-model:checked="rememberMe">
-            Ghi nhớ đăng nhập
-          </n-checkbox>
+          <n-checkbox v-model:checked="rememberMe"> Remember login </n-checkbox>
           <a href="#" class="text-sm text-primary hover:text-primary-light">
-            Quên mật khẩu?
+            Forgot password?
           </a>
         </div>
 
@@ -76,7 +77,7 @@
             @click="handleLogin"
             class="w-full"
           >
-            ĐĂNG NHẬP
+            Sign In
           </n-button>
         </div>
       </n-form>
@@ -87,9 +88,7 @@
             <div class="w-full border-t border-gray-300"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-gray-50 text-gray-500"
-              >Hoặc đăng nhập với</span
-            >
+            <span class="px-2 bg-gray-50 text-gray-500">Or Log in with</span>
           </div>
         </div>
 
@@ -141,7 +140,12 @@ const formData = reactive({
 const rules = {
   userName: [
     { required: true, message: "Please enter your username.", trigger: "blur" },
-    { min: 4, max: 20, message: "The username is invalid.", trigger: "blur" },
+    {
+      min: 4,
+      max: 20,
+      message: "Username must be between 4 and 20 characters long.",
+      trigger: "blur",
+    },
   ],
   password: [
     { required: true, message: "Please enter your password.", trigger: "blur" },
@@ -177,7 +181,8 @@ const handleLogin = async () => {
 };
 
 const switchToRegister = () => {
-  router.push("/register");
+  // router.push("/register");
+  message.info("The feature has not been enabled by the administrator.");
 };
 
 const switchToHome = () => {
@@ -185,11 +190,11 @@ const switchToHome = () => {
 };
 
 const loginWithGoogle = () => {
-  message.info("Tính năng đăng nhập với Google sẽ được tích hợp sau");
+  message.info("The Google login feature will be integrated later.");
 };
 
 const loginWithFacebook = () => {
-  message.info("Tính năng đăng nhập với Facebook sẽ được tích hợp sau");
+  message.info("The Facebook login feature will be integrated later.");
 };
 </script>
 
