@@ -8,14 +8,15 @@
           class="h-12 w-12 mr-3 rounded-lg"
         />
         <div class="text-3xl font-extrabold text-primary tracking-wide">
-          IELTS With DATIO
+          IELTS with DATIO
         </div>
       </div>
+
       <nav class="hidden md:flex space-x-8 text-gray-700">
-        <a
-          href="#"
+        <router-link
+          to="/"
           class="text-lg font-bold hover:text-primary transition-colors"
-          >TRANG CHỦ</a
+          >TRANG CHỦ</router-link
         >
         <a
           href="#"
@@ -33,20 +34,70 @@
           >LIÊN HỆ</a
         >
       </nav>
-      <n-button
-        type="primary"
-        :color="primaryColor"
-        class="px-6 py-3 text-lg font-bold rounded-lg shadow hover:opacity-90 transition-all"
-      >
-        LÀM TEST NGAY
-      </n-button>
+
+      <div v-if="authStore.isAuthenticated" class="flex items-center space-x-4">
+        <n-dropdown :options="userMenuOptions" @select="handleUserMenuSelect">
+          <div class="flex items-center space-x-2 cursor-pointer">
+            <!-- <n-avatar round size="small" :src="authStore.user?.avatar" /> -->
+            <span class="text-gray-700 font-medium">{{
+              authStore.user?.name
+            }}</span>
+          </div>
+        </n-dropdown>
+      </div>
+      <div v-else class="flex space-x-4">
+        <router-link to="/login">
+          <n-button
+            type="primary"
+            color="#7d4700"
+            class="px-4 py-2 font-bold rounded-lg"
+          >
+            ĐĂNG NHẬP
+          </n-button>
+        </router-link>
+        <router-link to="/register">
+          <n-button class="px-4 py-2 font-bold rounded-lg"> ĐĂNG KÝ </n-button>
+        </router-link>
+      </div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { NButton } from "naive-ui";
-import { useColors } from "@/composables/useColors";
+import { NButton, NDropdown } from "naive-ui";
+import { computed } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
 
-const { primaryColor } = useColors();
+const authStore = useAuthStore();
+const router = useRouter();
+
+const userMenuOptions = computed(() => [
+  {
+    label: "Hồ sơ",
+    key: "profile",
+  },
+  {
+    label: "Bài test của tôi",
+    key: "tests",
+  },
+  {
+    type: "divider",
+  },
+  {
+    label: "Đăng xuất",
+    key: "logout",
+  },
+]);
+
+const handleUserMenuSelect = (key: string) => {
+  if (key === "logout") {
+    authStore.logout();
+    router.push("/");
+  } else if (key === "profile") {
+    router.push("/profile");
+  } else if (key === "tests") {
+    router.push("/my-tests");
+  }
+};
 </script>

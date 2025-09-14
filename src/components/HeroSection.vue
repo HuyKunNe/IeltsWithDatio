@@ -22,9 +22,9 @@
       </div>
       <div class="flex justify-center">
         <img
-          src="../assets/logo.png"
+          src="../assets/logo.jpg"
           alt="IELTS Study"
-          class="rounded-xl shadow-lg max-h-[400px] object-cover"
+          class="max-h-[16rem] object-cover"
         />
       </div>
     </div>
