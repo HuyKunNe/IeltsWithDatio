@@ -32,7 +32,7 @@ export function useApi() {
       const errorMessage =
         (axiosError.response?.data as any)?.message ||
         axiosError.message ||
-        "Có lỗi xảy ra";
+        "An error has occurred.";
 
       state.value.error = errorMessage;
       state.value.loading = false;

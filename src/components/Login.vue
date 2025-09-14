@@ -140,15 +140,15 @@ const formData = reactive({
 
 const rules = {
   userName: [
-    { required: true, message: "Vui lòng nhập username", trigger: "blur" },
-    { min: 4, max: 20, message: "username không hợp lệ", trigger: "blur" },
+    { required: true, message: "Please enter your username.", trigger: "blur" },
+    { min: 4, max: 20, message: "The username is invalid.", trigger: "blur" },
   ],
   password: [
-    { required: true, message: "Vui lòng nhập mật khẩu", trigger: "blur" },
+    { required: true, message: "Please enter your password.", trigger: "blur" },
     {
       min: 8,
       max: 20,
-      message: "Mật khẩu phải có ít nhất 8 ký tự",
+      message: "Password must be between 8 and 20 characters long.",
       trigger: "blur",
     },
   ],
@@ -163,13 +163,13 @@ const handleLogin = async () => {
       userName: formData.userName,
       password: formData.password,
     });
-    message.success("Đăng nhập thành công!");
+    message.success("Login Successful!");
     router.push("/");
   } catch (error: any) {
     if (error?.message) {
       message.error(error.message);
     } else {
-      message.error("Đăng nhập thất bại. Vui lòng thử lại.");
+      message.error("Login failed. Please try again.");
     }
   } finally {
     loading.value = false;

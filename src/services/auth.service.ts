@@ -62,11 +62,11 @@ export const authService = {
       } else if (error.request) {
         // Request được gửi nhưng không nhận được response
         throw new AuthError(
-          "Không thể kết nối đến server. Vui lòng thử lại sau."
+          "Unable to connect to the server. Please try again later."
         );
       } else {
         // Lỗi khác
-        throw new AuthError(error.message || "Có lỗi xảy ra khi đăng nhập");
+        throw new AuthError(error.message || "An error occurred during login.");
       }
     }
   },
