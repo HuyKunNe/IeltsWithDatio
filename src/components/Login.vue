@@ -15,16 +15,16 @@
           />
         </div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-primary">
-          SIGN IN
+          Đăng nhập
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
-          Or
+          Hoặc
           <a
             href="#"
             class="font-medium text-primary hover:text-primary-light"
             @click.prevent="switchToRegister"
           >
-            Register new account
+            Đăng kí tài khoản mới
           </a>
         </p>
       </div>
@@ -35,7 +35,7 @@
         :rules="rules"
         ref="loginForm"
       >
-        <n-form-item path="userName" label="Username">
+        <n-form-item path="userName" label="Tên đăng nhập">
           <n-input
             v-model:value="formData.userName"
             placeholder="Enter your username"
@@ -48,7 +48,7 @@
           </n-input>
         </n-form-item>
 
-        <n-form-item path="password" label="Password">
+        <n-form-item path="password" label="Mật khẩu">
           <n-input
             v-model:value="formData.password"
             type="password"
@@ -63,7 +63,9 @@
         </n-form-item>
 
         <div class="flex items-center justify-between">
-          <n-checkbox v-model:checked="rememberMe"> Remember login </n-checkbox>
+          <n-checkbox v-model:checked="rememberMe">
+            Ghi nhớ đăng nhập
+          </n-checkbox>
           <a href="#" class="text-sm text-primary hover:text-primary-light">
             Forgot password?
           </a>
@@ -73,11 +75,12 @@
           <n-button
             type="primary"
             size="large"
+            color="#7d4700"
             :loading="loading"
             @click="handleLogin"
             class="w-full"
           >
-            Sign In
+            Đăng Nhập
           </n-button>
         </div>
       </n-form>
@@ -88,7 +91,9 @@
             <div class="w-full border-t border-gray-300"></div>
           </div>
           <div class="relative flex justify-center text-sm">
-            <span class="px-2 bg-gray-50 text-gray-500">Or Log in with</span>
+            <span class="px-2 bg-gray-50 text-gray-500"
+              >Hoặc đăng nhập với</span
+            >
           </div>
         </div>
 
@@ -139,20 +144,24 @@ const formData = reactive({
 
 const rules = {
   userName: [
-    { required: true, message: "Please enter your username.", trigger: "blur" },
+    {
+      required: true,
+      message: "Vui lòng nhập tên tài khoản.",
+      trigger: "blur",
+    },
     {
       min: 4,
       max: 20,
-      message: "Username must be between 4 and 20 characters long.",
+      message: "Tên đăng nhập phải từ 4 -20 kí tự.",
       trigger: "blur",
     },
   ],
   password: [
-    { required: true, message: "Please enter your password.", trigger: "blur" },
+    { required: true, message: "Vui lòng nhập mật khẩu", trigger: "blur" },
     {
       min: 8,
       max: 20,
-      message: "Password must be between 8 and 20 characters long.",
+      message: "Mật khẩu phải từ 8 - 20 kí tự",
       trigger: "blur",
     },
   ],
@@ -167,13 +176,13 @@ const handleLogin = async () => {
       userName: formData.userName,
       password: formData.password,
     });
-    message.success("Login Successful!");
+    message.success("Đăng nhập thành công!");
     router.push("/");
   } catch (error: any) {
     if (error?.message) {
       message.error(error.message);
     } else {
-      message.error("Login failed. Please try again.");
+      message.error("Đăng nhập thất bại, vui lòng thử lại.");
     }
   } finally {
     loading.value = false;

@@ -3,22 +3,30 @@
     <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-6 px-4">
       <div>
         <div class="text-xl font-bold text-white mb-2">IELTS With Datio</div>
-        <p>Học thông minh, đạt band cao</p>
+        <p class="text-l">Học thông minh, đạt band cao</p>
       </div>
       <div>
-        <h3 class="font-semibold mb-2 text-white">Menu</h3>
+        <h3 class="font-semibold mb-2 text-white text-xl">Menu</h3>
         <ul class="space-y-2">
           <li v-for="item in menuItems" :key="item">
-            <a href="#" class="hover:text-white">{{ item }}</a>
+            <a href="#" class="hover:text-white text-l">{{ item }}</a>
           </li>
         </ul>
       </div>
       <div>
         <h3 class="font-semibold mb-2 text-white">Kết nối</h3>
         <div class="flex space-x-4">
-          <a href="#" class="hover:text-white">🌐</a>
-          <a href="#" class="hover:text-white">📘</a>
-          <a href="#" class="hover:text-white">💬</a>
+          <ul class="space-y-2">
+            <li>
+              <a href="#" class="hover:text-white text-xl">🌐</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white text-xl">📘</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white text-xl">💬</a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
