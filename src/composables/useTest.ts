@@ -50,6 +50,10 @@ export function useTest() {
     createTest: (testData: CreateTestRequest) =>
       callApi(testService.createTest(testData)),
 
+    getAllTests: () => callApi(testService.getAllTests()),
+
+    getTestById: (id: number) => callApi(testService.getTestById(id)),
+
     callApi,
   };
 }

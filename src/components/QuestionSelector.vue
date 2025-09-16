@@ -171,10 +171,9 @@ const getQuestionTypeLabel = (type: string) => {
 
 const getQuestionTypeColor = (type: string) => {
   const colors: Record<string, string> = {
-    SINGLE_CHOICE: "primary",
+    SINGLE_CHOICE: "warning",
     MULTIPLE_CHOICE: "info",
     FILL_IN_BLANK: "success",
-    TRUE_FALSE: "warning",
   };
   return colors[type] || "default";
 };

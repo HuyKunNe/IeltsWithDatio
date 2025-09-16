@@ -30,11 +30,10 @@
           class="text-lg font-bold hover:text-primary transition-colors"
           >QUẢN LÍ TEST</router-link
         >
-        <a
-          v-if="authStore?.user?.roleName !== 'MANAGER'"
-          href="#"
+        <router-link
+          to="/tests"
           class="text-lg font-bold hover:text-primary transition-colors"
-          >BÀI TEST MẪU</a
+          >BÀI TEST</router-link
         >
         <a
           href="#"
@@ -52,7 +51,7 @@
         <n-dropdown :options="userMenuOptions" @select="handleUserMenuSelect">
           <div class="flex items-center space-x-2 cursor-pointer">
             <!-- <n-avatar round size="small" :src="authStore.user?.avatar" /> -->
-            <span class="text-gray-700 font-medium">{{
+            <span class="font-medium text-3xl text-primary">{{
               authStore.user?.name
             }}</span>
           </div>

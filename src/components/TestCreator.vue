@@ -386,7 +386,14 @@ const testRules: FormRules = {
     { required: false, message: "Vui lòng nhập mô tả", trigger: "blur" },
   ],
   timeLimit: [
-    { required: true, message: "Vui lòng nhập thời gian", trigger: "blur" },
+    {
+      required: true,
+      message: "Vui lòng nhập thời gian",
+      trigger: "blur",
+      validator: (_, value) => {
+        return value !== null && value !== undefined && value > 0;
+      },
+    },
     {
       type: "number",
       min: 1,
@@ -395,7 +402,14 @@ const testRules: FormRules = {
     },
   ],
   maxAttempts: [
-    { required: true, message: "Vui lòng nhập số lần làm", trigger: "blur" },
+    {
+      required: true,
+      message: "Vui lòng nhập số lần làm",
+      trigger: "blur",
+      validator: (_, value) => {
+        return value !== null && value !== undefined && value > 0;
+      },
+    },
     {
       type: "number",
       min: 1,
@@ -439,6 +453,9 @@ const getQuestionContent = (questionId: number) => {
 };
 
 const addQuestionToTest = (questionId: number) => {
+  console.log("run");
+  console.log(testFormRef.value);
+
   // Check if question already added
   if (testForm.testQuestions.some((q) => q.questionId === questionId)) {
     message.warning("Câu hỏi đã được thêm vào bài test");

@@ -69,6 +69,36 @@ export interface CreateTestResponseData {
   testResourceResponses: TestResourceResponse[];
 }
 
+export interface TestListItem {
+  id: number;
+  title: string;
+  description: string;
+  timeLimit: number;
+  type: "READING" | "LISTENING";
+  maxAttempts: number;
+  status: string;
+  createdAt: string;
+}
+
+export interface TestDetail {
+  id: number;
+  title: string;
+  description: string;
+  timeLimit: number;
+  type: "READING" | "LISTENING";
+  maxAttempts: number;
+  status: string;
+  createdAt: string;
+  testQuestionResponses: TestQuestionResponse[];
+  testResourceResponses: TestResourceResponse[];
+}
+export interface TestDetailResponse extends ApiResponse {
+  data: TestDetail;
+}
+export interface GetAllTestsResponse extends ApiResponse {
+  data: TestListItem[];
+}
+
 export interface CreateTestResponse extends ApiResponse {
   data: CreateTestResponseData;
 }
@@ -81,6 +111,16 @@ export const testService = {
       "/test/create",
       testData
     );
+    return response.data;
+  },
+
+  getAllTests: async (): Promise<GetAllTestsResponse> => {
+    const response = await apiClient.get<GetAllTestsResponse>("/test/getAll");
+    return response.data;
+  },
+
+  getTestById: async (id: number): Promise<TestDetailResponse> => {
+    const response = await apiClient.get<TestDetailResponse>(`/test/${id}`);
     return response.data;
   },
 };
