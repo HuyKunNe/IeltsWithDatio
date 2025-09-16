@@ -22,9 +22,16 @@
           v-if="authStore.user?.roleName === 'MANAGER'"
           to="/questions"
           class="text-lg font-bold hover:text-primary transition-colors"
-          >CÂU HỎI</router-link
+          >QUẢN LÍ CÂU HỎI</router-link
+        >
+        <router-link
+          v-if="authStore.user?.roleName === 'MANAGER'"
+          to="/test/create"
+          class="text-lg font-bold hover:text-primary transition-colors"
+          >QUẢN LÍ TEST</router-link
         >
         <a
+          v-if="authStore?.user?.roleName !== 'MANAGER'"
           href="#"
           class="text-lg font-bold hover:text-primary transition-colors"
           >BÀI TEST MẪU</a

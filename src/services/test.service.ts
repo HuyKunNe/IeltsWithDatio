@@ -1,58 +1,85 @@
 import apiClient from "./api";
-import { ApiResponse } from "./types";
+import type { ApiResponse } from "./types";
 
-export interface Test {
+export interface TestQuestionRequest {
+  points: number;
+  questionId: number;
+}
+
+export interface TestResourceRequest {
+  resourceType: "AUDIO" | "IMAGE";
+  url: string;
+  content: string;
+  description: string;
+  displayOrder: number;
+}
+
+export interface CreateTestRequest {
+  title: string;
+  description: string;
+  timeLimit: number;
+  type: "READING" | "LISTENING";
+  maxAttempts: number;
+  testQuestions: TestQuestionRequest[];
+  testResources: TestResourceRequest[];
+}
+
+export interface TestQuestionResponse {
+  id: number;
+  points: number;
+  status: string;
+  createdAt: string;
+  questionResponse: {
+    id: number;
+    content: string;
+    type: string;
+    status: string;
+    createAt: string;
+    listAnswers: Array<{
+      id: number;
+      content: string;
+      isCorrect: string;
+      status: string;
+      createAt: string;
+    }>;
+  };
+}
+
+export interface TestResourceResponse {
+  id: number;
+  resourceType: string;
+  url: string;
+  content: string;
+  description: string;
+  displayOrder: number;
+  status: string;
+  createdAt: string;
+}
+
+export interface CreateTestResponseData {
   id: number;
   title: string;
   description: string;
-  duration: number;
-  difficulty: string;
-  questions: Question[];
-}
-
-export interface Question {
-  id: number;
-  content: string;
+  timeLimit: number;
   type: string;
-  options: Option[];
+  maxAttempts: number;
+  status: string;
+  createdAt: string;
+  testQuestionResponses: TestQuestionResponse[];
+  testResourceResponses: TestResourceResponse[];
 }
 
-export interface Option {
-  id: number;
-  content: string;
-  isCorrect: boolean;
-}
-
-export interface TestResponse extends ApiResponse {
-  data: Test[];
-}
-
-export interface SingleTestResponse extends ApiResponse {
-  data: Test;
+export interface CreateTestResponse extends ApiResponse {
+  data: CreateTestResponseData;
 }
 
 export const testService = {
-  getAllTests: async (): Promise<TestResponse> => {
-    const response = await apiClient.get<TestResponse>("/tests");
-    return response.data;
-  },
-
-  getTestById: async (id: number): Promise<SingleTestResponse> => {
-    const response = await apiClient.get<SingleTestResponse>(`/tests/${id}`);
-    return response.data;
-  },
-
-  submitTest: async (testId: number, answers: any): Promise<ApiResponse> => {
-    const response = await apiClient.post<ApiResponse>(
-      `/tests/${testId}/submit`,
-      answers
-    );
-    return response.data;
-  },
-
-  getTestResults: async (testId: number): Promise<ApiResponse> => {
-    const response = await apiClient.get<ApiResponse>(
-      `/tests/${testId}/results`
+  createTest: async (
+    testData: CreateTestRequest
+  ): Promise<CreateTestResponse> => {
+    const response = await apiClient.post<CreateTestResponse>(
+      "/test/create",
+      testData
     );
     return response.data;
   },

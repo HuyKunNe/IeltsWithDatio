@@ -2,13 +2,29 @@
   <div class="min-h-screen bg-gray-50 pt-[6rem] pb-20">
     <div class="max-w-6xl mx-auto px-4">
       <!-- Header -->
-      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h1 class="text-3xl font-bold text-primary mb-2">
-          Quản Lý Ngân Hàng Câu Hỏi
-        </h1>
-        <p class="text-gray-600">Tạo và quản lý câu hỏi cho bài test IELTS</p>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <n-button @click="goBack" circle>
+            <template #icon>
+              <n-icon><ArrowBack /></n-icon>
+            </template>
+          </n-button>
+          <div>
+            <h1 class="text-3xl font-bold text-primary mb-2">
+              Quản Lý Ngân Hàng Câu Hỏi
+            </h1>
+            <p class="text-gray-600">
+              Tạo và quản lý câu hỏi cho bài test IELTS
+            </p>
+          </div>
+        </div>
+        <n-button type="primary" @click="goToTestCreator">
+          <template #icon>
+            <n-icon><Add /></n-icon>
+          </template>
+          Tạo Bài Test
+        </n-button>
       </div>
-
       <!-- Form tạo câu hỏi -->
       <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">
@@ -170,6 +186,7 @@ import { useMessage } from "naive-ui";
 import { Add, Trash, Close } from "@vicons/ionicons5";
 import { useQuestion } from "@/composables/useQuestion";
 import type { QuestionRequest } from "@/services/question.service";
+import { useRouter } from "vue-router";
 
 const message = useMessage();
 const { createQuestions } = useQuestion();
@@ -312,6 +329,16 @@ const submitQuestions = async () => {
   } finally {
     submitting.value = false;
   }
+};
+
+const router = useRouter();
+
+const goBack = () => {
+  router.go(-1);
+};
+
+const goToTestCreator = () => {
+  router.push("/test/create");
 };
 </script>
 

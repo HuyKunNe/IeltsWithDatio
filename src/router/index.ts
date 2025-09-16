@@ -4,6 +4,7 @@ import Login from "@/components/Login.vue";
 import QuestionManager from "@/components/QuestionManager.vue";
 import { useAuthStore } from "@/stores/auth";
 import QuestionList from "@/components/QuestionList.vue";
+import TestCreator from "@/components/TestCreator.vue";
 
 const routes = [
   {
@@ -27,6 +28,12 @@ const routes = [
     path: "/questions",
     name: "QuestionList",
     component: QuestionList,
+    meta: { requiresAuth: true, requiresRole: "MANAGER" },
+  },
+  {
+    path: "/test/create",
+    name: "TestCreator",
+    component: TestCreator,
     meta: { requiresAuth: true, requiresRole: "MANAGER" },
   },
 ];
