@@ -374,6 +374,7 @@ const testTypeOptions = [
 const resourceTypeOptions = [
   { label: "Audio", value: "AUDIO" },
   { label: "Image", value: "IMAGE" },
+  { label: "Document", value: "" },
 ];
 
 // Validation rules

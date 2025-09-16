@@ -37,13 +37,8 @@
                 :alt="test.title"
                 class="w-full h-full object-contain"
               />
-              <div class="absolute top-4 right-4">
-                <n-tag :type="getStatusColor(test.status)" size="small" round>
-                  {{ test.status }}
-                </n-tag>
-              </div>
               <div class="absolute bottom-4 left-4">
-                <n-tag :type="getTestTypeColor(test.type)" size="small">
+                <n-tag :type="getTestTypeColor(test.type)" size="medium">
                   {{ getTestTypeLabel(test.type) }}
                 </n-tag>
               </div>
@@ -194,16 +189,6 @@ const getTestTypeColor = (type: string) => {
     LISTENING: "success",
   };
   return colors[type] || "default";
-};
-
-const getStatusColor = (status: string) => {
-  const colors: Record<string, string> = {
-    ACTIVATED: "success",
-    DEACTIVATED: "error",
-    PENDING: "warning",
-    DRAFT: "default",
-  };
-  return colors[status] || "default";
 };
 
 const formatDate = (dateString: string) => {

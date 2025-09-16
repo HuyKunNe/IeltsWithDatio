@@ -372,7 +372,7 @@ const openResource = (url: string) => {
 };
 
 const startTest = () => {
-  message.info("Tính năng làm bài test sẽ được tích hợp sau");
+  router.push(`/test/${test.value.id}/attempt`);
 };
 
 const editTest = () => {

@@ -7,6 +7,8 @@ import QuestionList from "@/components/QuestionList.vue";
 import TestCreator from "@/components/TestCreator.vue";
 import TestList from "@/components/TestList.vue";
 import TestDetail from "@/components/TestDetail.vue";
+import TestResult from "@/components/TestResult.vue";
+import TestAttempt from "@/components/TestAttempt.vue";
 
 const routes = [
   {
@@ -48,6 +50,18 @@ const routes = [
     path: "/tests/:id",
     name: "TestDetail",
     component: TestDetail,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/test/:id/attempt",
+    name: "TestAttempt",
+    component: TestAttempt,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/test-result/:id",
+    name: "TestResult",
+    component: TestResult,
     meta: { requiresAuth: true },
   },
 ];

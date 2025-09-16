@@ -5,9 +5,9 @@
         THỬ NGAY MỘT BÀI TEST LISTENING
       </h2>
       <img
-        src="https://images.unsplash.com/photo-1596495578069-5f2fcaadd5c3?w=800"
+        src="https://image.anninhthudo.vn/w660/Uploaded/2025/erwqqdxwp/2024_10_14/chung-chi-ielts-9424.jpg.avif"
         alt="Test Demo"
-        class="mx-auto rounded-lg shadow-lg max-h-[400px] mb-8"
+        class="mx-auto max-h-[400px] mb-8"
       />
       <div>
         <n-button
