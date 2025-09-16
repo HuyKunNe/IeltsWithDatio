@@ -73,6 +73,14 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const userMenuOptions = computed(() => [
+  ...(authStore.user?.roleName === "MANAGER"
+    ? [
+        {
+          label: "Quản lý câu hỏi",
+          key: "question-manager",
+        },
+      ]
+    : []),
   {
     label: "Hồ sơ",
     key: "profile",
@@ -98,6 +106,8 @@ const handleUserMenuSelect = (key: string) => {
     router.push("/profile");
   } else if (key === "tests") {
     router.push("/my-tests");
+  } else if (key === "question-manager") {
+    router.push("question-manager");
   }
 };
 </script>
