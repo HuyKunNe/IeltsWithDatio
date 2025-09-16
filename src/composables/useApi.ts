@@ -59,11 +59,8 @@ export function useApi() {
 
     // Test APIs
     getAllTests: () => callApi(testService.getAllTests()),
+
     getTestById: (id: number) => callApi(testService.getTestById(id)),
-    submitTest: (testId: number, answers: any) =>
-      callApi(testService.submitTest(testId, answers)),
-    getTestResults: (testId: number) =>
-      callApi(testService.getTestResults(testId)),
 
     // Generic call
     callApi,
