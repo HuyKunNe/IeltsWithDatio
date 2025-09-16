@@ -29,6 +29,10 @@ export interface QuestionResponse {
   listAnswers: AnswerResponse[];
 }
 
+export interface QuestionsListResponse extends ApiResponse {
+  data: QuestionResponse[];
+}
+
 export interface CreateQuestionsResponse extends ApiResponse {
   data: QuestionResponse[];
 }
@@ -44,24 +48,10 @@ export const questionService = {
     return response.data;
   },
 
-  getQuestions: async (): Promise<CreateQuestionsResponse> => {
-    const response = await apiClient.get<CreateQuestionsResponse>("/questions");
+  getAllActiveQuestions: async (): Promise<QuestionsListResponse> => {
+    const response = await apiClient.get<QuestionsListResponse>(
+      "/question/get-all-activate"
+    );
     return response.data;
   },
-
-  // updateQuestion: async (
-  //   id: number,
-  //   question: Partial<QuestionRequest>
-  // ): Promise<ApiResponse> => {
-  //   const response = await apiClient.put<ApiResponse>(
-  //     `/questions/${id}`,
-  //     question
-  //   );
-  //   return response.data;
-  // },
-
-  // deleteQuestion: async (id: number): Promise<ApiResponse> => {
-  //   const response = await apiClient.delete<ApiResponse>(`/questions/${id}`);
-  //   return response.data;
-  // },
 };

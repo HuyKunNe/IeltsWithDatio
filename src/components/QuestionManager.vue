@@ -237,8 +237,8 @@ const addQuestionToList = () => {
 
   // Validate answers
   const validAnswers = newQuestion.answers.filter((ans) => ans.content.trim());
-  if (validAnswers.length < 2) {
-    message.error("Cần ít nhất 2 câu trả lời");
+  if (validAnswers.length < 1) {
+    message.error("Cần ít nhất 1 câu trả lời");
     return;
   }
 

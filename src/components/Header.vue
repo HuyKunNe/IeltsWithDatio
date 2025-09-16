@@ -18,6 +18,12 @@
           class="text-lg font-bold hover:text-primary transition-colors"
           >TRANG CHỦ</router-link
         >
+        <router-link
+          v-if="authStore.user?.roleName === 'MANAGER'"
+          to="/questions"
+          class="text-lg font-bold hover:text-primary transition-colors"
+          >CÂU HỎI</router-link
+        >
         <a
           href="#"
           class="text-lg font-bold hover:text-primary transition-colors"
@@ -77,7 +83,7 @@ const userMenuOptions = computed(() => [
     ? [
         {
           label: "Quản lý câu hỏi",
-          key: "question-manager",
+          key: "questions",
         },
       ]
     : []),
@@ -106,8 +112,8 @@ const handleUserMenuSelect = (key: string) => {
     router.push("/profile");
   } else if (key === "tests") {
     router.push("/my-tests");
-  } else if (key === "question-manager") {
-    router.push("question-manager");
+  } else if (key === "questions") {
+    router.push("/questions");
   }
 };
 </script>

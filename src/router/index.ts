@@ -3,6 +3,7 @@ import Home from "@/components/Home.vue";
 import Login from "@/components/Login.vue";
 import QuestionManager from "@/components/QuestionManager.vue";
 import { useAuthStore } from "@/stores/auth";
+import QuestionList from "@/components/QuestionList.vue";
 
 const routes = [
   {
@@ -20,6 +21,12 @@ const routes = [
     path: "/question-manager",
     name: "QuestionManager",
     component: QuestionManager,
+    meta: { requiresAuth: true, requiresRole: "MANAGER" },
+  },
+  {
+    path: "/questions",
+    name: "QuestionList",
+    component: QuestionList,
     meta: { requiresAuth: true, requiresRole: "MANAGER" },
   },
 ];

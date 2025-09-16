@@ -50,7 +50,8 @@ export function useQuestion() {
     createQuestions: (questions: QuestionRequest[]) =>
       callApi(questionService.createQuestions(questions)),
 
-    getQuestions: () => callApi(questionService.getQuestions()),
+    getAllActiveQuestions: () =>
+      callApi(questionService.getAllActiveQuestions()),
 
     callApi,
   };
