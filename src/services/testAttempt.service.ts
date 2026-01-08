@@ -56,12 +56,51 @@ export interface SubmitTestAttemptResponse extends ApiResponse {
   data: TestAttemptResponse;
 }
 
+// New response types for detailed test result
+export interface StudentAnswerTestResultResponse {
+  id: number;
+  answerText?: string;
+  isCorrect?: boolean | null;
+  points?: number;
+  content?: string;
+}
+
+export interface QuestionResponse {
+  id: number;
+  content: string;
+  type: string;
+  listAnswers?: Array<{
+    id: number;
+    content: string;
+    isCorrect?: string;
+  }>;
+}
+
+export interface QuestionWithStudentAnswerResponse {
+  question: QuestionResponse;
+  studentAnswers?: StudentAnswerTestResultResponse[] | null;
+}
+
+export interface TestResultResponse {
+  id: number;
+  score: number;
+  startAt: string;
+  submitAt: string;
+  studentName: string;
+  testName: number;
+  questionWithStudentAnswers: QuestionWithStudentAnswerResponse[];
+}
+
+export interface GetTestResultResponse extends ApiResponse {
+  data: TestResultResponse;
+}
+
 export const testAttemptService = {
   createTestAttempt: async (
     data: CreateTestAttemptRequest
   ): Promise<CreateTestAttemptResponse> => {
     const response = await apiClient.post<CreateTestAttemptResponse>(
-      "/test-attempt/create",
+      "/test-attempts/create",
       data
     );
     return response.data;
@@ -71,7 +110,7 @@ export const testAttemptService = {
     data: SubmitTestAttemptRequest
   ): Promise<SubmitTestAttemptResponse> => {
     const response = await apiClient.post<SubmitTestAttemptResponse>(
-      "/test-attempt/submit",
+      "/test-attempts/submit",
       data
     );
     return response.data;
@@ -82,7 +121,13 @@ export const testAttemptService = {
     testId: number
   ): Promise<ApiResponse> => {
     const response = await apiClient.get<ApiResponse>(
-      `/test-attempt/user-attempts/${studentId}/${testId}`
+      `/test-attempts/user-attempts/${studentId}/${testId}`
+    );
+    return response.data;
+  },
+  getTestResult: async (id: number): Promise<GetTestResultResponse> => {
+    const response = await apiClient.get<GetTestResultResponse>(
+      `/test-attempts/${id}`
     );
     return response.data;
   },

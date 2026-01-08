@@ -1,5 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-100 pt-24 pb-8">
+  <div
+    :class="[
+      'min-h-screen bg-gray-100',
+      uiStore.showHeader ? 'pt-24' : 'pt-0',
+    ]"
+  >
     <!-- Pre-test Check -->
     <div v-if="!testAttempt && !loading" class="max-w-2xl mx-auto py-8 px-4">
       <div class="bg-white rounded-lg shadow-md p-6 text-center">
@@ -432,6 +437,7 @@ import type {
   TestAttemptResponse,
 } from "@/services/testAttempt.service";
 import { useAuthStore } from "@/stores/auth";
+import { useUiStore } from "@/stores/ui";
 import { useMessage } from "naive-ui";
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -444,6 +450,7 @@ const route = useRoute();
 const router = useRouter();
 const message = useMessage();
 const authStore = useAuthStore();
+const uiStore = useUiStore();
 const { getTestById } = useTest();
 const { createTestAttempt, submitTestAttempt, getStudentAttempts } =
   useTestAttempt();
@@ -628,11 +635,26 @@ const fetchRemainingAttempts = async () => {
     authStore.user.accountId,
     test.value.id
   );
-  noOfAttempt.value = fetchData?.data?.data;
+  // normalize API response to a numeric count
+  const resp = fetchData?.data?.data;
+  let attempts = 0;
+  if (typeof resp === "number") attempts = resp;
+  else if (Array.isArray(resp)) attempts = resp.length;
+  else if (resp && typeof resp === "object") {
+    if (typeof (resp as any).count === "number") attempts = (resp as any).count;
+    else if (typeof (resp as any).total === "number")
+      attempts = (resp as any).total;
+    else if (typeof (resp as any).length === "number")
+      attempts = (resp as any).length;
+  }
+  noOfAttempt.value = attempts;
 };
 
 const remainingAttempts = computed(() => {
-  return test.value.maxAttempts - noOfAttempt.value;
+  const max = Number(test.value.maxAttempts) || 0;
+  const used = Number(noOfAttempt.value) || 0;
+  const rem = max - used;
+  return rem >= 0 ? rem : 0;
 });
 
 const answeredQuestions = computed(() => {
@@ -675,6 +697,7 @@ const startTest = async () => {
 
     if (result.data) {
       testAttempt.value = result.data.data;
+      uiStore.setShowHeader(false);
       startTimer();
       message.success("Bắt đầu làm bài!");
     }
@@ -793,6 +816,7 @@ const submitTest = async () => {
   } finally {
     submitting.value = false;
     stopTimer();
+    uiStore.setShowHeader(true);
   }
 };
 
@@ -816,6 +840,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   stopTimer();
+  uiStore.setShowHeader(true);
 });
 
 // Watch for navigation away

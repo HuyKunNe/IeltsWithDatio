@@ -1,5 +1,8 @@
 <template>
-  <header class="w-full bg-white shadow-md fixed top-0 z-50">
+  <header
+    v-if="uiStore.showHeader"
+    class="w-full bg-white shadow-md fixed top-0 z-50"
+  >
     <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
       <div class="flex items-center">
         <img
@@ -80,8 +83,10 @@ import { NButton, NDropdown } from "naive-ui";
 import { computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
+import { useUiStore } from "@/stores/ui";
 
 const authStore = useAuthStore();
+const uiStore = useUiStore();
 const router = useRouter();
 
 const userMenuOptions = computed(() => [

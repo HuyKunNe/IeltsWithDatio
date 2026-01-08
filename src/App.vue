@@ -25,14 +25,18 @@ import Header from "./components/Header.vue";
 import FooterSection from "./components/FooterSection.vue";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { useUiStore } from "@/stores/ui";
 
 const route = useRoute();
+const uiStore = useUiStore();
 
 const showHeader = computed(
-  () => !["Login", "Register"].includes(route.name as string)
+  () =>
+    !["Login", "Register"].includes(route.name as string) && uiStore.showHeader
 );
 const showFooter = computed(
-  () => !["Login", "Register"].includes(route.name as string)
+  () =>
+    !["Login", "Register"].includes(route.name as string) && uiStore.showHeader
 );
 </script>
 

@@ -46,7 +46,7 @@
         </div>
 
         <!-- Test Information -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="bg-white rounded-lg shadow-md py-6 px-12 mb-6">
           <h3 class="text-xl font-semibold text-gray-800 mb-4">
             Thông tin bài test
           </h3>
@@ -68,7 +68,9 @@
                 >
                 <p class="text-gray-800">{{ test.timeLimit }} phút</p>
               </div>
+            </div>
 
+            <div class="space-y-3">
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1"
                   >Số câu hỏi:</label
@@ -77,9 +79,6 @@
                   {{ test.testQuestionResponses?.length || 0 }} câu
                 </p>
               </div>
-            </div>
-
-            <div class="space-y-3">
               <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1"
                   >Số lần làm tối đa:</label
@@ -87,7 +86,7 @@
                 <p class="text-gray-800">{{ test.maxAttempts }}</p>
               </div>
 
-              <div>
+              <!-- <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1"
                   >Ngày tạo:</label
                 >
@@ -101,7 +100,7 @@
                 <p class="text-gray-800">
                   {{ test.testResourceResponses?.length || 0 }} tài nguyên
                 </p>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
