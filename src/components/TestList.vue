@@ -9,6 +9,10 @@
               Danh Sách Bài Test
             </h1>
             <p class="text-gray-600">Tất cả bài test IELTS có trong hệ thống</p>
+            <p class="text-sm text-gray-500 mt-1">
+              Hiển thị {{ displayedTests.length }} của {{ allTests.length }} bài
+              test
+            </p>
           </div>
           <n-button type="primary" @click="goToTestCreator" v-if="isManager">
             <template #icon>
@@ -19,13 +23,56 @@
         </div>
       </div>
 
+      <!-- Filters và Search -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <!-- Search -->
+          <n-input
+            v-model:value="searchTerm"
+            placeholder="Tìm kiếm bài test..."
+            clearable
+            @clear="handleSearch"
+            @keydown.enter="handleSearch"
+          >
+            <template #prefix>
+              <n-icon><Search /></n-icon>
+            </template>
+          </n-input>
+
+          <!-- Filter by type -->
+          <n-select
+            v-model:value="filterType"
+            :options="testTypeOptions"
+            placeholder="Lọc theo loại"
+            clearable
+            @update:value="handleFilter"
+          />
+
+          <!-- Items per page -->
+          <n-select
+            v-model:value="pagination.pageSize"
+            :options="pageSizeOptions"
+            placeholder="Số lượng / trang"
+            @update:value="handlePageSizeChange"
+          />
+
+          <!-- Refresh button -->
+          <n-button @click="fetchTests" type="primary" ghost>
+            <template #icon>
+              <n-icon><Refresh /></n-icon>
+            </template>
+            Làm mới
+          </n-button>
+        </div>
+      </div>
+
       <!-- Loading -->
       <n-spin :show="loading" class="mb-6">
         <!-- Test Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Test Card -->
           <div
-            v-for="test in tests"
+            v-for="test in displayedTests"
             :key="test.id"
             class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
             @click="viewTest(test)"
@@ -104,10 +151,20 @@
         </div>
 
         <!-- Empty state -->
-        <div v-if="!loading && tests.length === 0" class="text-center py-12">
-          <n-empty description="Chưa có bài test nào">
+        <div
+          v-if="!loading && filteredTests.length === 0"
+          class="text-center py-12"
+        >
+          <n-empty description="Không tìm thấy bài test nào">
             <template #extra>
-              <n-button v-if="isManager" @click="goToTestCreator" size="small">
+              <n-button size="small" @click="resetFilters" v-if="hasFilters">
+                Xóa bộ lọc
+              </n-button>
+              <n-button
+                v-if="isManager && !hasFilters"
+                @click="goToTestCreator"
+                size="small"
+              >
                 Tạo bài test đầu tiên
               </n-button>
             </template>
@@ -115,19 +172,31 @@
         </div>
       </n-spin>
 
-      <!-- Pagination (nếu cần) -->
-      <div class="bg-white rounded-lg shadow-md p-4" v-if="false">
-        <!-- Có thể thêm pagination sau nếu API hỗ trợ -->
+      <!-- Pagination -->
+      <div
+        class="bg-white rounded-lg shadow-md p-4"
+        v-if="pagination.totalPages > 1"
+      >
+        <n-pagination
+          v-model:page="pagination.page"
+          :page-count="pagination.totalPages"
+          :page-size="pagination.pageSize"
+          :item-count="pagination.total"
+          show-size-changer
+          :page-sizes="[6, 9, 12, 15]"
+          @update:page="handlePageChange"
+          @update:page-size="handlePageSizeChange"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useMessage } from "naive-ui";
-import { Add, Eye, Create } from "@vicons/ionicons5";
+import { Add, Eye, Create, Search, Refresh } from "@vicons/ionicons5";
 import { useTest } from "@/composables/useTest";
 import { useAuthStore } from "@/stores/auth";
 import type { TestListItem } from "@/services/test.service";
@@ -138,10 +207,35 @@ const authStore = useAuthStore();
 const { getAllTests } = useTest();
 
 // Data
-const tests = ref<TestListItem[]>([]);
+const allTests = ref<TestListItem[]>([]);
 const loading = ref(false);
 const messageText = ref("");
 const messageType = ref<"success" | "error" | "info" | "warning">("info");
+
+// Pagination
+const pagination = reactive({
+  page: 1,
+  pageSize: 6, // 3x3 grid = 9 items per page
+  total: 0,
+  totalPages: 0,
+});
+
+// Filters
+const searchTerm = ref("");
+const filterType = ref("");
+
+// Options
+const testTypeOptions = [
+  { label: "Reading", value: "READING" },
+  { label: "Listening", value: "LISTENING" },
+];
+
+const pageSizeOptions = [
+  { label: "3 bài / trang", value: 3 },
+  { label: "6 bài / trang", value: 6 },
+  { label: "9 bài / trang", value: 9 },
+  { label: "12 bài / trang", value: 12 },
+];
 
 // Computed
 const isManager = computed(() => {
@@ -149,6 +243,38 @@ const isManager = computed(() => {
     authStore.user?.roleName === "MANAGER" ||
     authStore.user?.roleName === "ADMIN"
   );
+});
+
+const hasFilters = computed(() => {
+  return searchTerm.value || filterType.value;
+});
+
+const filteredTests = computed(() => {
+  let tests = allTests.value;
+
+  // Filter by search term
+  if (searchTerm.value) {
+    const searchLower = searchTerm.value.toLowerCase();
+    tests = tests.filter(
+      (test) =>
+        test.title.toLowerCase().includes(searchLower) ||
+        (test.description &&
+          test.description.toLowerCase().includes(searchLower))
+    );
+  }
+
+  // Filter by type
+  if (filterType.value) {
+    tests = tests.filter((test) => test.type === filterType.value);
+  }
+
+  return tests;
+});
+
+const displayedTests = computed(() => {
+  const start = (pagination.page - 1) * pagination.pageSize;
+  const end = start + pagination.pageSize;
+  return filteredTests.value.slice(start, end);
 });
 
 // Methods
@@ -164,7 +290,8 @@ const fetchTests = async () => {
       messageType.value = "error";
       message.error("Lỗi khi tải bài test: " + result.error);
     } else if (result.data) {
-      tests.value = result.data.data;
+      allTests.value = result.data.data;
+      updatePagination();
     }
   } catch (error) {
     messageText.value = "Có lỗi xảy ra khi tải bài test";
@@ -173,6 +300,45 @@ const fetchTests = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const updatePagination = () => {
+  pagination.total = filteredTests.value.length;
+  pagination.totalPages = Math.ceil(pagination.total / pagination.pageSize);
+
+  // Reset to page 1 if current page is beyond total pages
+  if (pagination.page > pagination.totalPages) {
+    pagination.page = 1;
+  }
+};
+
+const handleSearch = () => {
+  pagination.page = 1;
+  updatePagination();
+};
+
+const handleFilter = () => {
+  pagination.page = 1;
+  updatePagination();
+};
+
+const handlePageChange = (page: number) => {
+  pagination.page = page;
+  // Scroll to top when changing page
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+const handlePageSizeChange = (pageSize: number) => {
+  pagination.pageSize = pageSize;
+  pagination.page = 1;
+  updatePagination();
+};
+
+const resetFilters = () => {
+  searchTerm.value = "";
+  filterType.value = "";
+  pagination.page = 1;
+  updatePagination();
 };
 
 const getTestTypeLabel = (type: string) => {
@@ -210,6 +376,15 @@ const editTest = (test: TestListItem) => {
 const goToTestCreator = () => {
   router.push("/test/create");
 };
+
+// Watchers
+watch([searchTerm, filterType], () => {
+  updatePagination();
+});
+
+watch(filteredTests, () => {
+  updatePagination();
+});
 
 // Lifecycle
 onMounted(() => {
