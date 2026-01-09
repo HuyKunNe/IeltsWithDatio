@@ -9,6 +9,7 @@ import TestList from "@/components/TestList.vue";
 import TestDetail from "@/components/TestDetail.vue";
 import TestResult from "@/components/TestResult.vue";
 import TestAttempt from "@/components/TestAttempt.vue";
+import EditQuestion from "@/components/EditQuestion.vue";
 
 const routes = [
   {
@@ -26,6 +27,12 @@ const routes = [
     path: "/question-manager",
     name: "QuestionManager",
     component: QuestionManager,
+    meta: { requiresAuth: true, requiresRole: "MANAGER" },
+  },
+  {
+    path: "/question-manager/edit/:id",
+    name: "EditQuestion",
+    component: EditQuestion,
     meta: { requiresAuth: true, requiresRole: "MANAGER" },
   },
   {

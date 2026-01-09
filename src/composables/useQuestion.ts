@@ -1,4 +1,4 @@
-import type { QuestionRequest } from "@/services/question.service";
+import type { EditQuestionRequest, QuestionRequest } from "@/services/question.service";
 import { questionService } from "@/services/question.service";
 import type { AxiosError } from "axios";
 import { ref } from "vue";
@@ -52,6 +52,9 @@ export function useQuestion() {
 
     getAllActiveQuestions: () =>
       callApi(questionService.getAllActiveQuestions()),
+
+    editQuestion: (id: number, question: EditQuestionRequest) => 
+      callApi(questionService.editQuestion(id, question)),
 
     callApi,
   };

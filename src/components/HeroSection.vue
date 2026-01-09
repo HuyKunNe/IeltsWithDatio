@@ -14,6 +14,7 @@
         <n-button
           type="primary"
           :color="primaryColor"
+          @click="goToQuestionManager"
           size="large"
           class="px-8 py-4 text-lg font-bold rounded-lg shadow hover:opacity-90 transition-all"
         >
@@ -34,6 +35,11 @@
 <script setup lang="ts">
 import { NButton } from "naive-ui";
 import { useColors } from "@/composables/useColors";
+import { useRouter } from "vue-router";
 
 const { primaryColor } = useColors();
+const router = useRouter();
+const goToQuestionManager = () => {
+  router.push("/tests");
+};
 </script>

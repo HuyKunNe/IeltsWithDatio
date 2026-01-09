@@ -147,13 +147,11 @@
                       .listAnswers"
                     :key="answer.id"
                     :class="{
-                      'text-green-600 font-medium': answer.isCorrect === 'true',
+                      'text-green-600 font-medium': answer.isCorrect === true,
                     }"
                   >
                     {{ ansIndex + 1 }}. {{ answer.content }}
-                    <span v-if="answer.isCorrect === 'true'" class="ml-2"
-                      >✓</span
-                    >
+                    <span v-if="answer.isCorrect === true" class="ml-2">✓</span>
                   </li>
                 </ul>
               </div>
@@ -354,16 +352,6 @@ const getStatusColor = (status: string) => {
     DRAFT: "default",
   };
   return colors[status] || "default";
-};
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("vi-VN", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 };
 
 const openResource = (url: string) => {

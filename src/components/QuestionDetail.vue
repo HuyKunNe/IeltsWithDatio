@@ -43,16 +43,12 @@
           :key="answer.id"
           class="p-3 border rounded-lg"
           :class="{
-            'border-green-200 bg-green-50': answer.isCorrect === 'true',
+            'border-green-200 bg-green-50': answer.isCorrect === true,
           }"
         >
           <div class="flex items-center justify-between">
             <span class="font-medium">Câu {{ index + 1 }}:</span>
-            <n-tag
-              v-if="answer.isCorrect === 'true'"
-              type="success"
-              size="small"
-            >
+            <n-tag v-if="answer.isCorrect === true" type="success" size="small">
               Đúng
             </n-tag>
             <n-tag v-else type="default" size="small"> Sai </n-tag>
@@ -135,7 +131,7 @@ const formatDate = (dateString: string) => {
 };
 
 const editQuestion = () => {
-  router.push(`/question-manager?edit=${props.question.id}`);
+  router.push(`/question-manager/edit/${props.question.id}`);
   emit("close");
 };
 </script>

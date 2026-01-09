@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 pt-[6rem] pb-8">
+  <div class="min-h-screen bg-gray-50 pt-36 pb-8">
     <div class="max-w-7xl mx-auto px-4">
       <!-- Header -->
       <div class="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -366,7 +366,7 @@ const viewQuestion = (question: QuestionResponse) => {
 };
 
 const editQuestion = (question: QuestionResponse) => {
-  router.push(`/question-manager?edit=${question.id}`);
+  router.push(`/question-manager/edit/${question.id}`);
 };
 
 const goToQuestionManager = () => {

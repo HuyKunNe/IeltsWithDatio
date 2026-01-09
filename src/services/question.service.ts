@@ -12,10 +12,16 @@ export interface QuestionRequest {
   answers: AnswerRequest[];
 }
 
+export interface EditQuestionRequest {
+  content: string;
+  type: string;
+  answers: AnswerRequest[];
+}
+
 export interface AnswerResponse {
   id: number;
   content: string;
-  isCorrect: string;
+  isCorrect: boolean;
   status: string;
   createAt: string;
 }
@@ -43,6 +49,17 @@ export const questionService = {
   ): Promise<CreateQuestionsResponse> => {
     const response = await apiClient.post<CreateQuestionsResponse>(
       "/question/create",
+      questions
+    );
+    return response.data;
+  },
+
+  editQuestion: async (
+    id: number,
+    questions: EditQuestionRequest
+  ): Promise<QuestionResponse> => {
+    const response = await apiClient.put<QuestionResponse>(
+      `/question/edit/${id}`,
       questions
     );
     return response.data;
