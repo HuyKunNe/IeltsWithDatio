@@ -124,8 +124,8 @@
       <div class="flex-1 flex overflow-hidden">
         <!-- Left Sidebar - Resources -->
         <div
+          v-if="!hasAudioOnly && hasResources"
           class="w-1/2 bg-white border-r p-4 overflow-y-auto"
-          v-if="hasResources"
         >
           <div class="space-y-4">
             <!-- Resource Items -->
@@ -169,30 +169,6 @@
                   </div>
                 </div>
               </div>
-
-              <!-- AUDIO Resource -->
-              <div
-                v-else-if="resource.resourceType === 'AUDIO'"
-                class="resource-content"
-              >
-                <div class="bg-gray-50 rounded-lg p-3">
-                  <embed
-                    class="w-full"
-                    :class="{ 'opacity-50': !resource.url }"
-                    :src="resource.url"
-                  ></embed>
-                  <div
-                    v-if="!resource.url"
-                    class="text-center py-4 text-gray-400"
-                  >
-                    <n-icon size="32" class="mb-2">
-                      <MusicalNotesOutline />
-                    </n-icon>
-                    <p class="text-sm">Không có audio</p>
-                  </div>
-                </div>
-              </div>
-
               <!-- TEXT Resource (không có type hoặc type khác) -->
               <div v-else class="resource-content">
                 <div class="bg-gray-50 rounded-lg p-4">
@@ -217,8 +193,32 @@
         </div>
 
         <!-- Right Content - Questions -->
-        <div class="flex-1 p-6 overflow-y-auto">
-          <div class="max-w-4xl mx-auto">
+        <div
+          :class="[
+            'p-6 overflow-y-auto',
+            !hasAudioOnly && hasResources ? 'flex-1' : 'w-full',
+          ]"
+        >
+          <div
+            v-if="hasAudioOnly"
+            v-for="resource in audioResources"
+            :key="resource.id"
+          >
+            <iframe
+              :src="resource.url"
+              :title="resource.description || 'Audio'"
+              frameborder="0"
+              allow="autoplay; encrypted-media;"
+              referrerpolicy="strict-origin-when-cross-origin"
+              style="display: none"
+            ></iframe>
+          </div>
+          <div
+            :class="[
+              hasAudioOnly || !hasResources ? 'max-w-7xl' : 'max-w-4xl',
+              'mx-auto',
+            ]"
+          >
             <!-- Questions for Current Page -->
             <div
               v-for="(question, index) in paginatedQuestions"
@@ -439,15 +439,11 @@ import type {
 } from "@/services/testAttempt.service";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
+import { driveImageFallbacks, driveImageUrl } from "@/utils/driveImage";
+import { DocumentTextOutline, ImageOutline } from "@vicons/ionicons5";
 import { useMessage } from "naive-ui";
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import {
-  ImageOutline,
-  MusicalNotesOutline,
-  DocumentTextOutline,
-} from "@vicons/ionicons5";
-import { driveImageUrl, driveImageFallbacks } from "@/utils/driveImage";
 const route = useRoute();
 const router = useRouter();
 const message = useMessage();
@@ -854,6 +850,20 @@ const handleImageError = (event: Event) => {
     }
   }
 };
+
+const hasAudioOnly = computed(() => {
+  if (!test.value?.testResourceResponses?.length) return false;
+  return test.value.testResourceResponses.every(
+    (resource: any) => resource.resourceType === "AUDIO"
+  );
+});
+
+const audioResources = computed(() => {
+  if (!test.value?.testResourceResponses) return [];
+  return test.value.testResourceResponses.filter(
+    (resource: any) => resource.resourceType === "AUDIO"
+  );
+});
 
 // Lifecycle
 onMounted(() => {

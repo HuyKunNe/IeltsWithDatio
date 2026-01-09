@@ -73,7 +73,7 @@
               <n-input-number
                 v-model:value="testForm.maxAttempts"
                 :min="1"
-                :max="10"
+                :max="9999"
                 :step="1"
                 placeholder="Nhập số lần làm"
                 class="w-full"
@@ -502,7 +502,15 @@ const submitTest = async () => {
 
     submitting.value = true;
     messageText.value = "";
-
+    testForm.testResources.forEach((resource) => {
+      if (
+        resource.resourceType === "AUDIO" &&
+        resource.url &&
+        resource.url.includes("youtube.com")
+      ) {
+        resource.url = convertToEmbedUrl(resource.url);
+      }
+    });
     const result = await createTest(testForm);
 
     if (result.error) {
@@ -526,6 +534,24 @@ const submitTest = async () => {
     submitting.value = false;
   }
 };
+
+function convertToEmbedUrl(url: string): string {
+  // Lấy video ID từ URL YouTube
+  const videoIdMatch = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/
+  );
+
+  if (!videoIdMatch || !videoIdMatch[1]) {
+    messageText.value = "URL YouTube không hợp lệ";
+    messageType.value = "error";
+    return "";
+  }
+
+  const videoId = videoIdMatch[1];
+
+  // Tạo URL embed với autoplay
+  return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+}
 
 const handleQuestionCreated = (newQuestion: any) => {
   // Thêm câu hỏi mới vào bài test
