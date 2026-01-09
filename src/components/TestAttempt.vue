@@ -1,9 +1,6 @@
 <template>
   <div
-    :class="[
-      'min-h-screen bg-gray-100',
-      uiStore.showHeader ? 'pt-24' : 'pt-0',
-    ]"
+    :class="['min-h-screen bg-gray-100', uiStore.showHeader ? 'pt-24' : 'pt-0']"
   >
     <!-- Pre-test Check -->
     <div v-if="!testAttempt && !loading" class="max-w-2xl mx-auto py-8 px-4">
@@ -144,12 +141,23 @@
               >
                 <div class="relative">
                   <img
-                    :src="resource.url"
+                    :src="driveImageUrl(resource.url)"
                     :alt="resource.description || 'Hình ảnh'"
                     class="w-full h-auto rounded-lg object-contain mx-auto border"
-                    @error="handleImageError"
                     loading="lazy"
+                    :data-fallbacks="
+                      JSON.stringify(driveImageFallbacks(resource.url))
+                    "
+                    @error="handleImageError"
                   />
+                  <div
+                    class="image-fallback hidden text-center py-8 text-gray-400"
+                  >
+                    <n-icon size="48" class="mb-2">
+                      <ImageOutline />
+                    </n-icon>
+                    <p>Không thể hiển thị hình ảnh</p>
+                  </div>
                   <div
                     v-if="!resource.url"
                     class="text-center py-8 text-gray-400"
@@ -168,18 +176,11 @@
                 class="resource-content"
               >
                 <div class="bg-gray-50 rounded-lg p-3">
-                  <audio
-                    controls
+                  <embed
                     class="w-full"
                     :class="{ 'opacity-50': !resource.url }"
-                  >
-                    <source
-                      v-if="resource.url"
-                      :src="resource.url"
-                      type="audio/mpeg"
-                    />
-                    Trình duyệt của bạn không hỗ trợ audio element.
-                  </audio>
+                    :src="resource.url"
+                  ></embed>
                   <div
                     v-if="!resource.url"
                     class="text-center py-4 text-gray-400"
@@ -446,6 +447,7 @@ import {
   MusicalNotesOutline,
   DocumentTextOutline,
 } from "@vicons/ionicons5";
+import { driveImageUrl, driveImageFallbacks } from "@/utils/driveImage";
 const route = useRoute();
 const router = useRouter();
 const message = useMessage();
@@ -822,13 +824,33 @@ const submitTest = async () => {
 
 const handleImageError = (event: Event) => {
   const img = event.target as HTMLImageElement;
+  const ds = img.dataset || ({} as DOMStringMap);
+  let fallbacks: string[] = [];
+  try {
+    fallbacks = ds.fallbacks ? JSON.parse(ds.fallbacks) : [];
+  } catch (e) {
+    fallbacks = [];
+  }
+
+  // Determine next fallback to try
+  const currentSrc = img.src;
+  let currentIndex = fallbacks.indexOf(currentSrc);
+  if (currentIndex === -1) currentIndex = Number(ds.fallbackIndex || 0);
+  const nextIndex = currentIndex + 1;
+
+  if (nextIndex < fallbacks.length) {
+    img.dataset.fallbackIndex = String(nextIndex);
+    img.src = fallbacks[nextIndex];
+    return;
+  }
+
+  // No more fallbacks: hide image and show fallback content
   img.style.display = "none";
-  // Hiển thị fallback content nếu có
   const resourceItem = img.closest(".resource-content");
   if (resourceItem) {
     const fallback = resourceItem.querySelector(".image-fallback");
     if (fallback) {
-      fallback.classList.remove("hidden");
+      (fallback as HTMLElement).classList.remove("hidden");
     }
   }
 };
